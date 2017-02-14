@@ -1,4 +1,7 @@
+The purpose of this project is to learn php and have fun. Git for the Design Team.
+
 # v0.0.0
+
 1. Install a stack (WAMP, MAMP, or LAMP)
 For Mac: https://bitnami.com/stack/mamp (there are others as well)
 
