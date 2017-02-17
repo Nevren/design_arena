@@ -3,6 +3,7 @@
 	ob_start(); //NO IDEA WHAT THIS DOES, apparently it's helpful...
 	session_start();
 	require_once 'dbconnect.php';
+  include 'friends.php';
 
 	if( !isset($_SESSION['user']) ) {
 		header("Location: index.php");//Redirect
@@ -43,7 +44,7 @@
       }
     }
 
-    $quest_complete = mysql_query('INSERT INTO quest_complete VALUES ("'.$_POST['quest'].'","'.$_SESSION['user'].'","0","0");');//add this quest to done
+    $quest_complete = mysql_query('INSERT INTO quest_complete VALUES ("'.$_POST['quest'].'","'.$_SESSION['user'].'","0");');//add this quest to done
     //echo "QuestId: ".$_POST['quest'];
     //echo "SessionId: ".$_SESSION['user'];
     $xp_amount_to_give = $main + $bonus;
@@ -173,7 +174,9 @@
         <p><a href="settings.php">Game Management &#9654;</a></p>
       </div>
     </div>
-
+    <div class="container-quest">
+      <?php getAllUsers(); ?>
+    </div>
     <div class="container-quest">
       <?php getQuests(); ?>
     </div>
