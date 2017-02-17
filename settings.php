@@ -23,6 +23,11 @@
 		header("Location: settings.php");//Redirect - Prevents page reload sending quest complete
     	exit;
 	}
+
+	//CHANGE THIS LATER
+	if( isset($_POST['resetQuests'])){
+		$dailyReset=mysql_query("TRUNCATE TABLE quest_complete;");
+  	}
 ?>
 <!DOCTYPE html>
 <html>
@@ -33,43 +38,56 @@
 
 <body>
 	<div class="app-content">
-	  <div class="card card--login center-align">
-	    <div class="card--header">
-	      <h3 class=""><?php echo $userRow[1]; ?> - Game Management</h3>
-	      <small class="align-right"><a href="logout.php?logout">Sign Out</a></small>
-	    </div>
-	    <div class="card--content">
-	      <p class="remove-margin--top"></p>
-	    </div>
-	    <div class="card--footer">
-	  	  <a href="home.php"><span></span>Return to Game &#9654;</a>
-	    </div>
-	  </div>
+		  <div class="card card--login center-align">
+		    <div class="card--header">
+		      <h3 class=""><?php echo $userRow[1]; ?> - Game Management</h3>
+		      <small class="align-right"><a href="logout.php?logout">Sign Out</a></small>
+		    </div>
+		    <div class="card--content">
+		      <p class="remove-margin--top"></p>
+		    </div>
+		    <div class="card--footer">
+		  	  <a href="home.php"><span></span>Return to Game &#9654;</a>
+		    </div>
+		  </div>
 
-	<div class="card card--login center-align">
-      <h3 class="card--header has-border">Make a Quest!</h3>
-      <div class="card--content">
-      <small>Input the quest details!</small>
-        <form method="post">
-          <fieldset class="column column--full">
+		<div class="card card--login center-align">
+	      <h3 class="card--header has-border">Make a Quest!</h3>
+	      <div class="card--content">
+	      <small>Input the quest details!</small>
+	        <form method="post">
+	          <fieldset class="column column--full">
 
-              <label for="quest_name">Quest Name (45 characters)</label>
-              <input type="text" name="quest_name" id="quest_name" required>
-              <label for="quest_description">Quest Description (255 characters)</label>
-              <input type="text" name="quest_description" id="quest_description" required>
-              <label for="quest_xp_main">Quest XP Main</label>
-              <input type="number" name="quest_xp_main" id="quest_xp_main" required>
-              <label for="quest_xp_bonus">Quest XP Bonus (If Hourly, Mark 0)</label>
-              <input type="number" name="quest_xp_bonus" id="quest_xp_bonus" required>
-              <label for="quest_hour_multiplier">Quest Hour Multiplier (Power of 10. If none, enter 0)</label>
-              <input type="number" name="quest_hour_multiplier" id="quest_hour_multiplier" required>
+	              <label for="quest_name">Quest Name (45 characters)</label>
+	              <input type="text" name="quest_name" id="quest_name" required>
+	              <label for="quest_description">Quest Description (255 characters)</label>
+	              <input type="text" name="quest_description" id="quest_description" required>
+	              <label for="quest_xp_main">Quest XP Main</label>
+	              <input type="number" name="quest_xp_main" id="quest_xp_main" required>
+	              <label for="quest_xp_bonus">Quest XP Bonus (If Hourly, Mark 0)</label>
+	              <input type="number" name="quest_xp_bonus" id="quest_xp_bonus" required>
+	              <label for="quest_hour_multiplier">Quest Hour Multiplier (Power of 10. If none, enter 0)</label>
+	              <input type="number" name="quest_hour_multiplier" id="quest_hour_multiplier" required>
 
-          </fieldset>
-          <input class="button button--smooth button--blue" type="submit" name="addQuest" value="Add Quest">
-        </form>
-      </div>
-    </div>
-</div>
+	          </fieldset>
+	          <input class="button button--smooth button--blue" type="submit" name="addQuest" value="Add Quest">
+	        </form>
+	      </div>
+	    </div>
+	    <div class="card card--login center-align">
+		    <div class="card--content">
+			    <form method="post">
+		          <fieldset class="column column--full">
+
+		              <h1>Reset Daily Quests</h1>
+		              <input type="hidden" name="quest_reset" id="quest_reset" required>
+
+		          </fieldset>
+		          <input class="button button--smooth button--blue" type="submit" name="resetQuests" value="Reset Quest">
+		        </form>
+		    </div>
+	    </div>
+	</div>
 </body>
 </html>
 <?php ob_end_flush(); //NO IDEA WHAT THIS DOES, apparently it's helpful...?>

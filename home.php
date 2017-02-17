@@ -58,8 +58,6 @@
     echo "Invalid Submission! Did you forget a checkbox?";
   }
 
-
-
   function getQuests() {
     //So here we need a list of all repeatable quests. But we also need to mark a quest as completed for it's duration, this gets kind of tricky... So what I'm thinking is, we don't use a timer, but rather we store a list of completed quests and a timestamp of when they can be active again. Best thought I have atm... I guess then the quest id would have to be looked up to see if it's currently in the "completed quest" database. If it's one time, it forever is in there (questID and userID paired).  
 

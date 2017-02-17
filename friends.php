@@ -15,6 +15,7 @@
 	//Quick all look up
 
 	function getAllUsers() {
+		echo "<h3>All Players</h3>";
 		$allUsersQuery = mysql_query("SELECT userId FROM users GROUP BY userId LIMIT 0, 1000;");
 	    $allUsersArray = array();
 	    while ($row = mysql_fetch_array($allUsersQuery, MYSQL_ASSOC)) {
@@ -33,7 +34,7 @@
 	        $currentUserArray = mysql_fetch_array(mysql_query("SELECT * FROM user_stats WHERE userId = ".$allUsersArray[$arrayUserNumber]));
 	        $currentUserNameArray = mysql_fetch_array(mysql_query("SELECT userName FROM users WHERE userId = ".$allUsersArray[$arrayUserNumber].";"));
 	        $arrayUserNumber++;//advance the selection
-	        echo "<p class='card'>Name: ".$currentUserNameArray[0]." XP: ".$currentUserArray[1]."</p>";
+	        echo "<p class='card card--quest center-align'>Name: ".$currentUserNameArray[0]." | XP: ".$currentUserArray[1]."</p>";
 	    }
 	}
 
