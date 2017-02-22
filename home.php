@@ -13,6 +13,11 @@
   $userRow=mysql_fetch_array(mysql_query("SELECT * FROM users WHERE userId=".$_SESSION['user']));
   $userStats=mysql_fetch_array(mysql_query("SELECT * FROM user_stats WHERE userId=".$_SESSION['user']));
 
+  if( $userRow[4] == 0) {//Check if user status (role) if it's not greater than 0, don't allow access.
+    header("Location: approval.php");//Redirect
+    exit;  
+  }
+
   if($userStats[0]!=$_SESSION['user']) {
     $addStats=mysql_query('INSERT INTO user_stats VALUES ("'.$_SESSION['user'].'","0");');
     $userStats=mysql_fetch_array(mysql_query("SELECT * FROM user_stats WHERE userId=".$_SESSION['user']));
@@ -56,6 +61,15 @@
   }
   else if (isset($_POST['addxp']) && !isset($_POST['main'])){//This shouldn't be possible. But check anyway...
     echo "Invalid Submission! Did you forget a checkbox?";
+  }
+  
+  function isAdmin() {//If Admin, Provide Link to Game Settings
+    $userRow=mysql_fetch_array(mysql_query("SELECT * FROM users WHERE userId=".$_SESSION['user']));
+    if( $userRow[4] == 200) {
+      echo '
+      <hr>
+      <p><a href="settings.php">Game Management &#9654;</a></p>';
+    }
   }
 
   function getQuests() {
@@ -168,8 +182,7 @@
             echo "<p>Welcome Back!</p>";
            } ?>
         <p> XP: <?php echo $userStats[1]; ?></p>
-        <hr>
-        <p><a href="settings.php">Game Management &#9654;</a></p>
+        <?php isAdmin(); ?>
       </div>
     </div>
     <div class="container-quest">

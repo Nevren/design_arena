@@ -9,6 +9,11 @@
 	}
 	$userRow=mysql_fetch_array(mysql_query("SELECT * FROM users WHERE userId=".$_SESSION['user']));
 
+	if( $userRow[4] != 200) {//Check if user status (role) if it's not 200, account is not admin
+    	header("Location: index.php");//Redirect
+    	exit;  
+  	}
+
 	if( isset($_POST['addQuest']) 
 		&& isset($_POST['quest_name']) 
 		&& isset($_POST['quest_description']) 
