@@ -88,7 +88,7 @@
 		              <input type="hidden" name="quest_reset" id="quest_reset" required>
 
 		          </fieldset>
-		          <input class="button button--smooth button--blue" type="submit" name="resetQuests" value="Reset Quest">
+		          <input class="button button--smooth button--orange" type="submit" name="resetQuests" value="Reset Quest">
 		        </form>
 		    </div>
 	    </div>

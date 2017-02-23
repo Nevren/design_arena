@@ -1,4 +1,5 @@
 <?php
+  //50*n^3
   //NOTE, mamp stack requires <?php and can't process <?
 	ob_start(); //NO IDEA WHAT THIS DOES, apparently it's helpful...
 	session_start();
@@ -25,6 +26,13 @@
   }
   else {
     $first_login=0;//The usual
+    $userStats=mysql_fetch_array(mysql_query("SELECT * FROM user_stats WHERE userId=".$_SESSION['user']));
+    $user_level = $userStats[2];//Set incase it doesn't get put in below.
+    $nextLevel = $userStats[2] + 1;
+    if ($userStats[1] >= (50*$nextLevel^3)) {
+      $user_level = $nextLevel;
+      $levelUp = mysql_query('UPDATE user_stats SET user_level='.$user_level.' WHERE userId = '.$_SESSION['user'].';');;
+    }
   }
   
   if( isset($_POST['addxp']) && isset($_POST['main'])) {
@@ -182,6 +190,7 @@
             echo "<p>Welcome Back!</p>";
            } ?>
         <p> XP: <?php echo $userStats[1]; ?></p>
+        <p> Lv: <?php echo $user_level; ?></p>
         <?php isAdmin(); ?>
       </div>
     </div>
