@@ -177,20 +177,20 @@
   <div class="app-content">
     <div class="card card--login">
       <div class="card--header card--header-padding has-border">
-        <h3 class="card--user float-left"><?php echo $userRow[1]; ?></h3>
+        <h3 class="card--user float-left"><?php echo $userRow[1]; ?> - Lvl: <?php echo $user_level; ?></h3>
         <small class="card--user-signout float-right"><a href="logout.php?logout">Sign Out</a></small>
       </div>
       <div class="card--content">
-        <p class="remove-margin--top"> Character Information: </p>
         <?php if($first_login == 1) {
-            echo "<p>First Login! (Could do something special here.)</p>";
-            echo $_SESSION['user'];
-           }
-           else {
-            echo "<p>Welcome Back!</p>";
-           } ?>
-        <p> XP: <?php echo $userStats[1]; ?></p>
-        <p> Lv: <?php echo $user_level; ?></p>
+            echo "<p class='remove-margin--top'>First Login! (Could do something special here.)</p>";
+            //echo $_SESSION['user'];
+            }
+            else {
+              echo "<p class='remove-margin--top'>Welcome Back!</p>";
+            } 
+        ?>
+        <p class="remove-margin--top"> Character Information: </p>
+        <span> XP: <?php echo $userStats[1]; ?></span>
         <?php isAdmin(); ?>
       </div>
     </div>
