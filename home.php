@@ -1,51 +1,61 @@
 <?php
-  //50*n^3
-  //NOTE, mamp stack requires <?php and can't process <?
-	ob_start(); //NO IDEA WHAT THIS DOES, apparently it's helpful...
+  //NOTE, mamp stack requires <?php and can't process <? by default
+	ob_start();
 	session_start();
 	require_once 'dbconnect.php';
   include 'friends.php';
 
+  //Start Up
 	if( !isset($_SESSION['user']) ) {
 		header("Location: index.php");//Redirect
 		exit;
 	}
 
-  $userRow=mysql_fetch_array(mysql_query("SELECT * FROM users WHERE userId=".$_SESSION['user']));
-  $userStats=mysql_fetch_array(mysql_query("SELECT * FROM user_stats WHERE userId=".$_SESSION['user']));
-
-  if( $userRow[4] == 0) {//Check if user status (role) if it's not greater than 0, don't allow access.
-    header("Location: approval.php");//Redirect
-    exit;  
+  //If all is good, go ahead and get user info:
+  else {
+    $userRow=mysql_fetch_array(mysql_query("SELECT * FROM users WHERE userId=".$_SESSION['user']));
+    $userStats=mysql_fetch_array(mysql_query("SELECT * FROM user_stats WHERE userId=".$_SESSION['user']));
+    //Check Account Type
+    if( $userRow[4] == 0 || $userRow[4] == -1) {//Check if user status (role) if it's not greater than 0, don't allow access. -1 is banned.
+      //Redirect to page letting user know they are not approved.
+      header("Location: approval.php");
+      exit;
+    }
   }
 
+  //The user doesn't yet exist. 
   if($userStats[0]!=$_SESSION['user']) {
     $addStats=mysql_query('INSERT INTO user_stats VALUES ("'.$_SESSION['user'].'","0");');
     $userStats=mysql_fetch_array(mysql_query("SELECT * FROM user_stats WHERE userId=".$_SESSION['user']));
-    $first_login=1;//Enables something special
+    $first_login=1;
   }
+
+  //The user has been here before.
   else {
-    $first_login=0;//The usual
+    $first_login=0;
+    //Calculate user level (Can this be done in SQL?)
     $userStats=mysql_fetch_array(mysql_query("SELECT * FROM user_stats WHERE userId=".$_SESSION['user']));
-    $user_level = $userStats[2];//Set incase it doesn't get put in below.
+    $user_level = $userStats[2];
     $nextLevel = $userStats[2] + 1;
-    if ($userStats[1] >= (50*$nextLevel^3)) {
+    //XP FORMULA
+    if ($userStats[1] >= ($nextLevel*($nextLevel-1)*300)) {//500*($nextLevel^3 : Formula from: https://forum.rpg.net/showthread.php?228600-D-amp-D-3-3-5-XP-Formula
       $user_level = $nextLevel;
       $levelUp = mysql_query('UPDATE user_stats SET user_level='.$user_level.' WHERE userId = '.$_SESSION['user'].';');;
     }
   }
-  
-  if( isset($_POST['addxp']) && isset($_POST['main'])) {
-    $main = trim($_POST['main']);
-    $main = strip_tags($main);
-    $main = htmlspecialchars($main);
 
-    $bonus = trim($_POST['bonus']);
-    $bonus = strip_tags($bonus);
-    $bonus = htmlspecialchars($bonus);
-    //Eventually this needs some attention for security, cuz you can break it easily with inspector and editing values...
+  //Request to add XP for closing something.
+  if(isset($_POST['addxp']) && isset($_POST['main'])) {
+    $mainStrip = trim($_POST['main']);
+    $mainStrip = strip_tags($mainStrip);
+    $mainStrip = htmlspecialchars($mainStrip);
+
+    $bonusStrip = trim($_POST['bonus']);
+    $bonusStrip = strip_tags($bonusStrip);
+    $bonusStrip = htmlspecialchars($bonusStrip);
+
     if (isset($_POST['main'])) {
-      $main = $_POST['main'];
+      $main = $mainStrip;
     }
 
     if (isset($_POST['bonus'])) {
@@ -53,13 +63,11 @@
         $bonus = $bonus = $_POST['bonus'] * $_POST['quest-modifier'];
       }
       else {
-        $bonus = $_POST['bonus'];
+        $bonus = $bonusStrip;
       }
     }
 
     $quest_complete = mysql_query('INSERT INTO quest_complete VALUES ("'.$_POST['quest'].'","'.$_SESSION['user'].'","0");');//add this quest to done
-    //echo "QuestId: ".$_POST['quest'];
-    //echo "SessionId: ".$_SESSION['user'];
     $xp_amount_to_give = $main + $bonus;
     $xp_amount_to_set = $xp_amount_to_give + $userStats[1];
     $user_xp = mysql_query('UPDATE user_stats SET user_experience='.$xp_amount_to_set.' WHERE userId = '.$_SESSION['user'].';');
@@ -81,22 +89,18 @@
   }
 
   function getQuests() {
-    //So here we need a list of all repeatable quests. But we also need to mark a quest as completed for it's duration, this gets kind of tricky... So what I'm thinking is, we don't use a timer, but rather we store a list of completed quests and a timestamp of when they can be active again. Best thought I have atm... I guess then the quest id would have to be looked up to see if it's currently in the "completed quest" database. If it's one time, it forever is in there (questID and userID paired).  
-
-    //FIRST Run through ALL quest
+    //FIRST Run through ALL quest.
     $allQuery = mysql_query("SELECT questId FROM quest GROUP BY questId LIMIT 0, 1000;");
     $allQuestsArray = array();
     while ($row = mysql_fetch_array($allQuery, MYSQL_ASSOC)) {
-        $allQuestsArray[] =  $row['questId'];
+      $allQuestsArray[] =  $row['questId'];
     }
-
-    //SECOND Get completed quests
+    //SECOND Get completed quests.
     $completedQuery = mysql_query("SELECT questId FROM quest_complete WHERE userId=".$_SESSION['user']." GROUP BY questId LIMIT 0, 1000;");
     $completedQuestsArray = array();
     while ($row = mysql_fetch_array($completedQuery, MYSQL_ASSOC)) {
-        $completedQuestsArray[] =  $row['questId'];
+      $completedQuestsArray[] =  $row['questId'];
     }
-
     //THIRD Get a list of quests excluding completed.
     $allQuery = mysql_query("SELECT questId FROM quest GROUP BY questId LIMIT 0, 1000;");
     $availableQuestsArray = array();
@@ -105,14 +109,13 @@
         $availableQuestsArray[] =  $row['questId'];
       }
     }
-
-    //ToDo - Check to see if today is a new day and clear out all the quests that are repeatable from completed_quest
-
+    //FOURTH Build html for displaying quest info.
     echo "<span class='custom-line'> Quest Log &#9654; All: ".count($allQuestsArray)." Completed: ".count($completedQuestsArray)." Available: ".count($availableQuestsArray)."</span>";
 
+    //Needs Attention Later
     $sizeOfArray =  count($availableQuestsArray);//How big is our list?
     $rangeOfArray = 96;//How many to show at a time - this may be more important in the future and would be the ground work for pagination
-    $arrayNumber =  0;//This will have to be figured out... can a variable persist like this? going to have to play with some includes here similar to sessions. For now just use 0 (Could also hardcode pages)
+    $arrayNumber =  0;//Need to persist a page number that the user is currently on. Not sure how. For now always start at 0.
     $checkid1 = "1";
     $checkid2 = "2";
 
@@ -120,7 +123,7 @@
         if ($arrayNumber >= $sizeOfArray) { return; }
         $currentArray = mysql_fetch_array(mysql_query("SELECT * FROM quest WHERE questId = ".$availableQuestsArray[$arrayNumber]));
         $arrayNumber++;//advance the selection
-
+        //Template for Quest Cards
         echo
         '<div class="card card--quest center-align">
           <h3 class="card--header has-border"> &#x1f501; '.$currentArray[1].'</h3>
@@ -131,7 +134,8 @@
                 <div class="checkbox--custom">
                   <input type="checkbox" name="main" value="'.$currentArray[3].'" id="'.$checkid1.'" required>
                   <label for="'.$checkid1.'" class="inline remove-margin--top" value="'.$currentArray[3].'">Main Objective. ('.$currentArray[3].')</label>
-                </div>';//Part 1 Complete
+                </div>';
+                //Build this for Normal Bonus
                 if ($currentArray[5] != 0) {
                   echo'<div class="">
                   <input type="text" name="bonus" id="'.$checkid2.'">
@@ -145,6 +149,7 @@
           </div>
         </div>';
                 }
+                //Build this for Text Field Bonus
                 else {
                 echo'<div class="checkbox--custom">
                   <input type="checkbox" name="bonus" value="'.$currentArray[4].'" id="'.$checkid2.'">
@@ -158,17 +163,16 @@
         </div>'
         ;//end echo
         }
-        $checkid1 = $checkid1 + $checkid2;//change the checkid to prevent labels activating other cards. These create id 1,2,3,4,etc... 
+        $checkid1 = $checkid1 + $checkid2;
         $checkid2 = $checkid2 + $checkid2;
     }
   }
-
-
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
-<title>Design Arena - Page1</title>
+<title>Design Arena - My Page</title>
   <link rel="stylesheet" href="./css/dashing.css" type="text/css" />
   <link rel="stylesheet" href="./css/custom.css" type="text/css" />
 </head>
@@ -203,4 +207,4 @@
   </div>
 </body>
 </html>
-<?php ob_end_flush(); //NO IDEA WHAT THIS DOES, apparently it's helpful...?>
+<?php ob_end_flush(); ?>
