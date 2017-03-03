@@ -3,16 +3,27 @@
   src: url('https://assets.smchcn.net/dashing-icons.woff') format('woff');
 }
 
-#levelBar::-moz-progress-bar{
-  background-color: green;
+#levelBar {
+	background-color: #333;
+	border-radius: 5px;
+	height: 20px;
 }
 
-#levelBar::-webkit-progress-bar {
+::-moz-progress-bar{
 	background-color: green;
 }
 
-#levelBar {
-	background-color: red;
+::-moz-progress-value {
+	background-color: #333;
+}
+
+::-webkit-progress-value {
+	background-color: #333;
+}
+
+::-webkit-progress-value {
+	background-color: green;
+	border-radius: 5px;
 	height: 20px;
 }
 
