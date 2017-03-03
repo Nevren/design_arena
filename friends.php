@@ -32,9 +32,10 @@
 	    for ($i = 0; $i < $rangeOfUserArray; $i++) {
 	        if ($arrayUserNumber >= $sizeOfUserArray) { return; }
 	        $currentUserArray = mysql_fetch_array(mysql_query("SELECT * FROM user_stats WHERE userId = ".$allUsersArray[$arrayUserNumber]));
+	        $currentUserLevel = $currentUserArray[2];
 	        $currentUserNameArray = mysql_fetch_array(mysql_query("SELECT userName FROM users WHERE userId = ".$allUsersArray[$arrayUserNumber].";"));
 	        $arrayUserNumber++;//advance the selection
-	        echo "<p class='card card--quest center-align'>Name: ".$currentUserNameArray[0]." | XP: ".$currentUserArray[1]."</p>";
+	        echo "<div class='card card--quest center-align'><strong>".$currentUserNameArray[0]." Lvl: ".$currentUserLevel."</strong> <p> XP: ".$currentUserArray[1]."</p></div>";
 	    }
 	}
 

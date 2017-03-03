@@ -42,6 +42,15 @@
 </head>
 
 <body>
+	<nav class="app-menu app-title--orange">
+		<div class="app-context">
+			<div class="app-title">Design Arena</div>
+		</div>
+		<ul class="app-navigation align-right">
+			<li><a href="home.php"><i class="dashing-icon dashing-icon--checkmark-filled"></i>Return to Game</a></li>
+			<li><a href="logout.php?logout"><i class="dashing-icon dashing-icon--close"></i>Sign Out</a></li>
+		</ul>
+	</nav>
 	<div class="app-content">
 		  <div class="card card--login center-align">
 		    <div class="card--header">
@@ -50,9 +59,6 @@
 		    </div>
 		    <div class="card--content">
 		      <p class="remove-margin--top"></p>
-		    </div>
-		    <div class="card--footer">
-		  	  <a href="home.php"><span></span>Return to Game &#9654;</a>
 		    </div>
 		  </div>
 

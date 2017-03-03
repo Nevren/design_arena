@@ -37,8 +37,10 @@
     $userStats=mysql_fetch_array(mysql_query("SELECT * FROM user_stats WHERE userId=".$_SESSION['user']));
     $user_level = $userStats[2];
     $nextLevel = $userStats[2] + 1;
+    $untilNext = ($nextLevel*($nextLevel-1)*300);
+
     //XP FORMULA
-    if ($userStats[1] >= ($nextLevel*($nextLevel-1)*300)) {//500*($nextLevel^3 : Formula from: https://forum.rpg.net/showthread.php?228600-D-amp-D-3-3-5-XP-Formula
+    if ($userStats[1] >= $untilNext) {//500*($nextLevel^3 : Formula from: https://forum.rpg.net/showthread.php?228600-D-amp-D-3-3-5-XP-Formula
       $user_level = $nextLevel;
       $levelUp = mysql_query('UPDATE user_stats SET user_level='.$user_level.' WHERE userId = '.$_SESSION['user'].';');;
     }
@@ -68,6 +70,7 @@
     }
 
     $quest_complete = mysql_query('INSERT INTO quest_complete VALUES ("'.$_POST['quest'].'","'.$_SESSION['user'].'","0");');//add this quest to done
+    echo "Debug: QuestID=".$_POST['quest']." This User= ".$_SESSION['user'];
     $xp_amount_to_give = $main + $bonus;
     $xp_amount_to_set = $xp_amount_to_give + $userStats[1];
     $user_xp = mysql_query('UPDATE user_stats SET user_experience='.$xp_amount_to_set.' WHERE userId = '.$_SESSION['user'].';');
@@ -83,8 +86,7 @@
     $userRow=mysql_fetch_array(mysql_query("SELECT * FROM users WHERE userId=".$_SESSION['user']));
     if( $userRow[4] == 200) {
       echo '
-      <hr>
-      <p><a href="settings.php">Game Management &#9654;</a></p>';
+      <a href="settings.php"><i class="dashing-icon dashing-icon--settings"></i>Admin Panel</a>';
     }
   }
 
@@ -126,7 +128,7 @@
         //Template for Quest Cards
         echo
         '<div class="card card--quest center-align">
-          <h3 class="card--header has-border"> &#x1f501; '.$currentArray[1].'</h3>
+          <h3 class="card--header has-border"> <i class="dashing-icon dashing-icon--question-filled"></i> '.$currentArray[1].'</h3>
           <div class="card--content">
           <small>'.$currentArray[2].'</small>
             <form method="post">
@@ -178,24 +180,32 @@
 </head>
 
 <body>
+  <nav class="app-menu app-title--orange">
+    <div class="app-context">
+      <div class="app-title">Design Arena</div>
+    </div>
+    <ul class="app-navigation align-right">
+      <li><?php isAdmin(); ?></li>
+      <li><a href="logout.php?logout"><i class="dashing-icon dashing-icon--close"></i>Sign Out</a></li>
+    </ul>
+  </nav>
   <div class="app-content">
     <div class="card card--login">
       <div class="card--header card--header-padding has-border">
         <h3 class="card--user float-left"><?php echo $userRow[1]; ?> - Lvl: <?php echo $user_level; ?></h3>
-        <small class="card--user-signout float-right"><a href="logout.php?logout">Sign Out</a></small>
       </div>
       <div class="card--content">
         <?php if($first_login == 1) {
-            echo "<p class='remove-margin--top'>First Login! (Could do something special here.)</p>";
+            echo "<span>Welcome!</span>";
             //echo $_SESSION['user'];
             }
             else {
-              echo "<p class='remove-margin--top'>Welcome Back!</p>";
+              echo "<span>Welcome Back!</span>";
             } 
-        ?>
-        <p class="remove-margin--top"> Character Information: </p>
-        <span> XP: <?php echo $userStats[1]; ?></span>
-        <?php isAdmin(); ?>
+        ?> 
+        <hr>
+        <progress id="levelBar" value="<?php echo $userStats[1]; ?>" min="0" max="<?php echo $untilNext; ?>" style="width: 100%;"></progress>
+        <p class="remove-margin--top"><?php echo $userStats[1]; ?> / <?php echo $untilNext; ?> XP</p>
       </div>
     </div>
     <div class="container-quest">
