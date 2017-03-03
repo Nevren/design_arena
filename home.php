@@ -25,7 +25,7 @@
 
   //The user doesn't yet exist. 
   if($userStats[0]!=$_SESSION['user']) {
-    $addStats=mysql_query('INSERT INTO user_stats VALUES ("'.$_SESSION['user'].'","0");');
+    $addStats=mysql_query('INSERT INTO user_stats VALUES ("'.$_SESSION['user'].'","0","0");');
     $userStats=mysql_fetch_array(mysql_query("SELECT * FROM user_stats WHERE userId=".$_SESSION['user']));
     $first_login=1;
   }
