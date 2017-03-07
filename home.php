@@ -41,10 +41,10 @@
     $userStats=mysql_fetch_array(mysql_query("SELECT * FROM user_stats WHERE userId=".$_SESSION['user']));
     $user_level = $userStats[2];
     $nextLevel = $userStats[2] + 1;
-    $untilNext = ($nextLevel*($nextLevel-1)*300);
+    $untilNext = 100*($nextLevel**2);//($nextLevel*($nextLevel-1)*300); <-previous
 
     //XP FORMULA
-    if ($userStats[1] >= $untilNext) {//500*($nextLevel^3 : Formula from: https://forum.rpg.net/showthread.php?228600-D-amp-D-3-3-5-XP-Formula
+    if ($userStats[1] >= $untilNext) {//500*($nextLevel^3 // Formula from: https://forum.rpg.net/showthread.php?228600-D-amp-D-3-3-5-XP-Formula //100($nextlevel^2)
       $user_level = $nextLevel;
       $levelUp = mysql_query('UPDATE user_stats SET user_level='.$user_level.' WHERE userId = '.$_SESSION['user'].';');;
     }
