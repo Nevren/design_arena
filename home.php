@@ -1,5 +1,9 @@
 <?php
-  //NOTE, mamp stack requires <?php and can't process <? by default
+  //NOTES: 
+  //mamp stack requires <?php and can't process <? by [default], it can be enabled, but I'm assuming for the project that it's not.
+  //mysql should be prepared before making statements
+  //mysqli has replaced these functions, revise at a later date
+  //The php could be in its own file. This would make pairing with javascript easier.
 	ob_start();
 	session_start();
 	require_once 'dbconnect.php';
@@ -141,7 +145,7 @@
                 if ($currentArray[5] != 0) {
                   echo'<div class="">
                   <input type="text" name="bonus" id="'.$checkid2.'">
-                  <label for="'.$checkid2.'" class="inline remove-margin--bottom" value="'.$currentArray[5].'">Bonus Objective. ( Hours * '.$currentArray[5].')</label>
+                  <label for="'.$checkid2.'" class="inline remove-margin--bottom" value="'.$currentArray[5].'">Bonus Objective. ( Bonus Unit * '.$currentArray[5].')</label>
                 </div>
                 <input name="quest-modifier" type="hidden" value="'.$currentArray[5].'">
                 <input name="quest" type="hidden" value="'.$currentArray[0].'">

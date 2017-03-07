@@ -35,7 +35,7 @@
 	        $currentUserLevel = $currentUserArray[2];
 	        $currentUserNameArray = mysql_fetch_array(mysql_query("SELECT userName FROM users WHERE userId = ".$allUsersArray[$arrayUserNumber].";"));
 	        $arrayUserNumber++;//advance the selection
-	        echo "<div class='card card--quest center-align'><strong>".$currentUserNameArray[0]." Lvl: ".$currentUserLevel."</strong> <p> XP: ".$currentUserArray[1]."</p></div>";
+	        echo "<div class='card card--quest center-align'><strong>".$currentUserNameArray[0]." <br> Lvl: ".$currentUserLevel."</strong> <p> XP: ".$currentUserArray[1]."</p></div>";
 	    }
 	}
 
