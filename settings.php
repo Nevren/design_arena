@@ -14,6 +14,7 @@
     	exit;  
   	}
 
+  	//Add quest to database
 	if( isset($_POST['addQuest']) 
 		&& isset($_POST['quest_name']) 
 		&& isset($_POST['quest_description']) 
@@ -29,7 +30,14 @@
     	exit;
 	}
 
-	//CHANGE THIS LATER
+	if( isset($_POST['updateAnnouncement'])) {
+		$_POST['announcement_string'] = mysql_real_escape_string($_POST['announcement_string']);
+		// echo $_POST['announcement_string'];
+		$query = "UPDATE announcement SET announcement='".$_POST['announcement_string']."' WHERE announcementId=0;";
+		$updateAnnouncement = mysql_query($query);
+	}
+
+	//Empty out the completed quests table
 	if( isset($_POST['resetQuests'])){
 		$dailyReset=mysql_query("TRUNCATE TABLE quest_complete;");
   	}
@@ -85,6 +93,7 @@
 	        </form>
 	      </div>
 	    </div>
+
 	    <div class="card card--login center-align">
 		    <div class="card--content">
 			    <form method="post">
@@ -98,7 +107,24 @@
 		        </form>
 		    </div>
 	    </div>
+
+	    <div class="card card--login center-align">
+	      <h3 class="card--header has-border">Global Announcement</h3>
+	      <div class="card--content">
+	      <small>What would you like to say?</small>
+	        <form method="post">
+	          <fieldset class="column column--full">
+
+	              <label for="announcement_string">Global Announcement (255 Characters)</label>
+	              <input type="text" name="announcement_string" id="announcement_string" required>
+
+	          </fieldset>
+	          <input class="button button--smooth button--blue" type="submit" name="updateAnnouncement" value="Update">
+	        </form>
+	      </div>
+	    </div>
+
 	</div>
 </body>
 </html>
-<?php ob_end_flush(); //NO IDEA WHAT THIS DOES, apparently it's helpful...?>
+<?php ob_end_flush(); ?>
