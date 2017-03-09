@@ -25,20 +25,9 @@ DROP TABLE IF EXISTS `quest_complete`;
 CREATE TABLE `quest_complete` (
   `questId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
-  `time` time DEFAULT NULL,
-  `key` int(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`key`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+  `time` time DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `quest_complete`
---
-
-LOCK TABLES `quest_complete` WRITE;
-/*!40000 ALTER TABLE `quest_complete` DISABLE KEYS */;
-/*!40000 ALTER TABLE `quest_complete` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -49,4 +38,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-02-14 13:12:33
+-- Dump completed on 2017-03-09 12:33:50
