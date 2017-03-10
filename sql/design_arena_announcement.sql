@@ -16,21 +16,17 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `quest`
+-- Table structure for table `announcement`
 --
 
-DROP TABLE IF EXISTS `quest`;
+DROP TABLE IF EXISTS `announcement`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `quest` (
-  `questId` int(11) NOT NULL AUTO_INCREMENT,
-  `quest_name` varchar(45) NOT NULL,
-  `quest_description` varchar(255) NOT NULL,
-  `quest_xp_main` int(11) NOT NULL,
-  `quest_xp_bonus` int(11) NOT NULL,
-  `quest_hour_multiplier` varchar(45) NOT NULL,
-  PRIMARY KEY (`questId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+CREATE TABLE `announcement` (
+  `announcementId` int(11) NOT NULL,
+  `announcement` varchar(255) DEFAULT NULL,
+  UNIQUE KEY `announcementsId_UNIQUE` (`announcementId`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
